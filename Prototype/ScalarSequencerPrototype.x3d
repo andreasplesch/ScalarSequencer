@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.3.dtd">
+<X3D profile='Interactive' version='3.3'  xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation =' http://www.web3d.org/specifications/x3d-3.3.xsd '>
+  <head>
+    <meta name='title' content='ScalarSequencerPrototype.x3d'/> 
+    <meta name='description' content='ScalarSequencer is modeled after ScalarInterpolator and generates SFFloat values.'/> 
+    <meta name='creator' content='Andreas Plesch'/> 
+    <meta name='created' content='Fall 2017'/> 
+    <meta name='reference' content=' http://www.web3d.org/technicalinfo/specifications/vrml97/part1/nodesRef.html#ScalarInterpolator '/> 
+    <meta name='subject' content='scalar sequencer'/> 
+    <meta name='identifier' content=' https://github.com/andreasplesch/ScalarSequencer '/> 
+    <meta name='license' content=' ../LICENSE'/>
+  </head> 
+  <Scene>      
+      <ProtoDeclare name='ScalarSequencer'>
+        <ProtoInterface>
+          
+          <field name='next' type='SFBool' accessType='inputOnly'></field>
+          <field name='previous' type='SFBool' accessType='inputOnly'></field>
+          <field name='fraction' type='SFFloat' value='0' accessType='inputOutput'></field>
+          <field name='key' type='MFFloat' value='0 0.2 0.4 1' accessType='inputOutput'></field>
+          <field name='keyValue' type='MFFloat' value='0 0.2 0.4 1' accessType='inputOutput'></field>
+          <field name='value_changed' type='SFFloat' accessType='outputOnly'></field>
+        
+        </ProtoInterface>
+        <ProtoBody>
+          <Script>
+            
+            <field name='next' type='SFBool' accessType='inputOnly'></field>
+            <field name='previous' type='SFBool' accessType='inputOnly'></field>
+            <field name='fraction' type='SFFloat' value='0' accessType='inputOutput'></field>
+            <field name='key' type='MFFloat' value='0 0.2 0.4 1' accessType='inputOutput'></field>
+            <field name='keyValue' type='MFFloat' value='0 0.2 0.4 1' accessType='inputOutput'></field>
+            <field name='value_changed' type='SFFloat' accessType='outputOnly'></field>
+            <field name='_keyIndex' type='SFFloat' value='-1' accessType='initializeOnly'></field>
+            <IS>
+              <connect protoField='next' nodeField='next'></connect>
+              <connect protoField='previous' nodeField='previous'></connect>
+              <connect protoField='fraction' nodeField='fraction'></connect>
+              <connect protoField='key' nodeField='key'></connect>
+              <connect protoField='keyValue' nodeField='keyValue'></connect>
+              <connect protoField='value_changed' nodeField='value_changed'></connect>
+            </IS>
+
+<![CDATA[ ecmascript:
+// var _keyIndex = -1;           
+function findInterval(time) {
+           
+  var keyLength = key.length-1;
+
+  if (time < key[0]) {
+      return 0;
+  }
+
+  else if (time >= key[keyLength]) {
+      return keyLength;
+  }
+
+  for (var i = 0; i < keyLength; ++i) {
+      if ((key[i] <= time) && (time < key[i+1])) {
+          return i;
+      }
+  }
+
+  return 0; // should never happen
+}
+           
+function set_fraction(fraction) {
+
+  var keyIndex = findInterval(fraction);
+  // only generate event when necessary, BS Contact does not like !==
+  if (keyIndex != _keyIndex) { 
+    _keyIndex = keyIndex;  
+    value_changed = keyValue[keyIndex];
+  }
+  fraction_changed = fraction; // also generate fraction output event
+  return;
+}
+           
+function next(val) {
+
+  if (val) {
+  
+    _keyIndex = (_keyIndex + 1)%(key.length);
+    value_changed = keyValue[_keyIndex];
+    return;
+  }
+}
+
+function previous(val) {           
+   
+  if (val) {
+   
+    _keyIndex = (_keyIndex - 1 + key.length)%(key.length);
+    value_changed = keyValue[_keyIndex];
+    return;
+  }
+}
+
+//probably necessary to explicitly handle key and keyValue set_ and _changed
+
+function key(val) {
+
+  Browser.print('new key '+ val);
+  key = val; // should generate key_changed event
+}
+
+function keyValue(val) {
+
+  Browser.print('new keyValue '+ val);
+  keyValue = val; // should generate keyValue_changed event
+}
+
+]]>
+
+          </Script>
+        </ProtoBody>
+      </ProtoDeclare>
+  </Scene>
+</X3D>
