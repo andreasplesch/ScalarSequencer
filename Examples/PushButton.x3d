@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.3.dtd">
+<X3D profile='Interactive' version='3.3'  xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation =' http://www.web3d.org/specifications/x3d-3.3.xsd '>
+
+<Scene>
+  <ExternProtoDeclare name='ScalarSequencer' 
+      url='"../Prototype/ScalarSequencerPrototype.x3d" 
+           "../Prototype/ScalarSequencerPrototype.x3d"'>
+      <field name='next' type='SFBool' accessType='inputOnly'></field>
+      <field name='previous' type='SFBool' accessType='inputOnly'></field>
+      <field name='fraction' type='SFFloat' value='0' accessType='inputOutput'></field>
+      <field name='key' type='MFFloat' accessType='inputOutput'></field>
+      <field name='keyValue' type='MFFloat' accessType='inputOutput'></field>
+      <field name='value_changed' type='SFFloat' accessType='outputOnly'></field>
+  </ExternProtoDeclare>
+  <Background skyColor='1 1 1'></Background> 
+      <Viewpoint description='Control 3-way lamp' orientation='-0.993 0.101 -0.063 1.06' position='0.06 3.63 2.29'></Viewpoint> 
+      <Transform DEF='PushBox' translation='-2 0 0'>
+        <Transform DEF='ControlBox'>
+          <Shape>
+            <Appearance>
+              <Material diffuseColor='0 .8 0'></Material>
+            </Appearance> 
+            <Box size='1 .5 1'></Box>
+          </Shape>
+        </Transform> 
+      <!-- ControlButton ROUTE:  [from ButtonMover.value_changed to translation ] -->
+        <Transform DEF='ControlButton' translation='0 .25 0'>
+        <!-- ButtonTouch ROUTE:  [from touchTime to ButtonTimer.startTime ] -->
+          <TouchSensor DEF='ButtonTouch' description='touch to activate'></TouchSensor> 
+          <Shape>
+            <Appearance>
+              <Material diffuseColor='1 0 0'></Material>
+            </Appearance> 
+            <Cylinder DEF='Button' bottom='false' height='.5' radius='.25'></Cylinder>
+          </Shape> 
+          <!-- ButtonMover ROUTEs:  [from ButtonTimer.fraction_changed to set_fraction ] [from value_changed to ControlButton.translation ] -->
+          <PositionInterpolator DEF='ButtonMover' key='0 .5 1' keyValue='0 .25 0 0 .05 0 0 .25 0'></PositionInterpolator> 
+          <!-- ButtonTimer ROUTEs:  [from ButtonTouch.touchTime to startTime ] [from fraction_changed to ButtonMover.set_fraction ] [from isActive to ControlScript.buttonMotionDone ] -->
+          <TimeSensor DEF='ButtonTimer' cycleInterval='.3' stopTime='1'></TimeSensor> 
+          <ROUTE fromNode='ButtonTouch' fromField='touchTime' toNode='ButtonTimer' toField='startTime'></ROUTE> 
+          <ROUTE fromNode='ButtonTimer' fromField='fraction_changed' toNode='ButtonMover' toField='set_fraction'></ROUTE> 
+          <ROUTE fromNode='ButtonMover' fromField='value_changed' toNode='ControlButton' toField='translation'></ROUTE>
+        </Transform>
+      </Transform> 
+      <Transform DEF='Lamp' translation='1 0 0'>
+        <Transform DEF='Base'>
+          <Shape>
+            <Appearance>
+              <Material></Material>
+            </Appearance> 
+            <Cylinder height='.5' radius='.25'></Cylinder>
+          </Shape>
+        </Transform> 
+        <Transform DEF='Bulb' translation='0 .5 0'>
+          <Shape>
+          <Appearance>
+          <!-- be sure to match initial color of script so that toggling is smooth and predictable --> 
+          <!-- LightBulbMaterial ROUTE:  [from ControlScript.lightBulbColor to diffuseColor ] -->
+            <Material DEF='LightBulbMaterial' diffuseColor='0.2 0.2 0.2'></Material>
+          </Appearance> 
+            <Sphere radius='.5'></Sphere>
+          </Shape>
+        </Transform>
+      </Transform> 
+      <!-- off,low,medium,high fractions-->
+      <ProtoInstance name='ScalarSequencer' DEF='AdvancerProto'>
+        <fieldValue name='key' value='0 0.2 0.4 1'></fieldValue> 
+        <fieldValue name='keyValue' value='0 0.2 0.4 1'></fieldValue>
+      </ProtoInstance> 
+      <!--ScalarSequencer DEF='Advancer' key='0 0.2 0.4 1' keyValue='0 0.2 0.4 1'></ScalarSequencer-->
+      <!-- off,low,medium,high colors-->
+      <ColorInterpolator DEF='ColorSource' key='0 0.2 0.4 1' keyValue='0.2, 0.2, 0.2 0.6, 0.5, 0.2 0.7, 0.7, 0.2 1, 1, 0.6'></ColorInterpolator>
+      <Transform  translation='-1 -2 0'>
+        <Billboard  axisOfRotation='0 0 0'>
+        <!-- ROUTE information for TextSwitch node:  [from ControlScript.buttonPushCount to whichChoice ] -->
+          <Switch  DEF='TextSwitch' whichChoice='0'>
+          <!-- States: 0=Off, 1=Low, 2=Medium, 3=High --> 
+            <Shape>
+              <Text  string='"Off"'>
+                <FontStyle  DEF='TextStyle' family='"SANS"' justify='"BEGIN" "MIDDLE"' style='BOLD'></FontStyle>
+              </Text> 
+              <Appearance  DEF='OffAppearance'>
+                <Material  diffuseColor='0.6 0.6 0.6'></Material>
+              </Appearance>
+            </Shape> 
+            <Shape>
+              <Text  string='"Low"'>
+                <FontStyle  USE='TextStyle'></FontStyle>
+              </Text> 
+              <Appearance  DEF='LowAppearance'>
+                <Material  diffuseColor='1 0.6 0.6'></Material>
+              </Appearance>
+            </Shape> 
+            <Shape>
+              <Text  string='"Medium"'>
+                <FontStyle  USE='TextStyle'></FontStyle>
+              </Text> 
+              <Appearance  DEF='MediumAppearance'>
+                <Material  diffuseColor='0.6 1 0.6'></Material>
+              </Appearance>
+            </Shape> 
+            <Shape>
+              <Text  string='"High"'>
+                <FontStyle  USE='TextStyle'></FontStyle>
+              </Text> 
+              <Appearance  DEF='HighAppearance'>
+                <Material  diffuseColor='0.6 0.6 1'></Material>
+              </Appearance>
+            </Shape>
+          </Switch>
+        </Billboard>
+      </Transform> 
+      <!-- off,low,medium,high choices-->
+      <IntegerSequencer DEF='Switcher' key='0 0.2 0.4 1' keyValue='0 1 2 3'></IntegerSequencer>
+      <ROUTE fromNode='ButtonTimer' fromField='isActive' toNode='Switcher' toField='next'></ROUTE>
+      <ROUTE fromNode='Switcher' fromField='value_changed' toNode='TextSwitch' toField='whichChoice'></ROUTE>
+      
+      <ROUTE fromNode='ButtonTimer' fromField='isActive' toNode='AdvancerProto' toField='next'></ROUTE>
+      <ROUTE fromNode='AdvancerProto' fromField='value_changed' toNode='ColorSource' toField='set_fraction'></ROUTE>
+      <ROUTE fromNode='ColorSource' fromField='value_changed' toNode='LightBulbMaterial' toField='diffuseColor'></ROUTE>
+      <!-- test set_key and key_changed -->
+      <ProtoInstance name='ScalarSequencer' DEF='keyProto'>
+        <fieldValue name='key' value='0 1'></fieldValue> 
+        <fieldValue name='keyValue' value='0 0.2 0.4 1'></fieldValue>
+      </ProtoInstance>
+      <Script DEF='triggerMFFloat'>
+        <field name='set_get' type='SFBool' accessType='inputOnly'></field>
+        <field name='key_changed' type='MFFloat' accessType='outputOnly'></field>
+        <field name='value' type='MFFloat' value='0 0.1 0.11 1' accessType='initializeOnly'></field>
+        
+<![CDATA[ ecmascript:
+
+function set_get(val) {
+  Browser.print('output '+ value.toString());
+  key_changed = value;
+}
+]]>
+      </Script>
+      <ROUTE fromNode='ButtonTouch' fromField='isActive' toNode='triggerMFFloat' toField='set_get'></ROUTE> 
+      <ROUTE fromNode='triggerMFFloat' fromField='key_changed' toNode='keyProto' toField='key'></ROUTE> 
+      <ROUTE fromNode='keyProto' fromField='key_changed' toNode='keyProto' toField='keyValue'></ROUTE> 
+ 
+    </Scene>
+</X3D>
