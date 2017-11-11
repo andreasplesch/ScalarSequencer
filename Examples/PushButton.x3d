@@ -16,14 +16,15 @@
   <Background skyColor='1 1 1'></Background> 
       <Viewpoint description='Control 3-way lamp' orientation='-0.993 0.101 -0.063 1.06' position='0.06 3.63 2.29'></Viewpoint> 
       <Transform DEF='PushBox' translation='-2 0 0'>
-        <Transform DEF='ControlBox'>
+        <Transform DEF='ControlBox' rotation='0 1 0 0.1'>
           <Shape>
             <Appearance>
               <Material diffuseColor='0 .8 0'></Material>
             </Appearance> 
             <Box size='1 .5 1'></Box>
           </Shape>
-        </Transform> 
+        </Transform>
+        <OrientationInterpolator DEF='RotationSource' key='0 0.2 0.4 1' keyValue='0 1 0 0, 0 1 0 0.4, 0 1 0 0.8, 0 1 0 1.2'/>
       <!-- ControlButton ROUTE:  [from ButtonMover.value_changed to translation ] -->
         <Transform DEF='ControlButton' translation='0 .25 0'>
         <!-- ButtonTouch ROUTE:  [from touchTime to ButtonTimer.startTime ] -->
@@ -71,7 +72,7 @@
       <!--ScalarSequencer DEF='Advancer' key='0 0.2 0.4 1' keyValue='0 0.2 0.4 1'></ScalarSequencer-->
       <!-- off,low,medium,high colors-->
       <ColorInterpolator DEF='ColorSource' key='0 0.2 0.4 1' keyValue='0.2, 0.2, 0.2 0.6, 0.5, 0.2 0.7, 0.7, 0.2 1, 1, 0.6'></ColorInterpolator>
-      <Transform  translation='-1 -2 0'>
+      <Transform  DEF='label' translation='-1 -2 0'>
         <Billboard  axisOfRotation='0 0 0'>
         <!-- ROUTE information for TextSwitch node:  [from ControlScript.buttonPushCount to whichChoice ] -->
           <Switch  DEF='TextSwitch' whichChoice='0'>
@@ -110,7 +111,9 @@
             </Shape>
           </Switch>
         </Billboard>
-      </Transform> 
+      </Transform>
+  	  <PositionInterpolator DEF='labelPosition' key='0 0.2 0.4 1' keyValue='-1 -2 0, -1 -1 0, -1 0 0, -1 1 0'/>
+      
       <!-- off,low,medium,high choices-->
       <IntegerSequencer DEF='Switcher' key='0 0.2 0.4 1' keyValue='0 1 2 3'></IntegerSequencer>
       <ROUTE fromNode='ButtonTimer' fromField='isActive' toNode='Switcher' toField='next'></ROUTE>
@@ -119,6 +122,10 @@
       <ROUTE fromNode='ButtonTimer' fromField='isActive' toNode='AdvancerProto' toField='next'></ROUTE>
       <ROUTE fromNode='AdvancerProto' fromField='value_changed' toNode='ColorSource' toField='set_fraction'></ROUTE>
       <ROUTE fromNode='ColorSource' fromField='value_changed' toNode='LightBulbMaterial' toField='diffuseColor'></ROUTE>
+      <ROUTE fromNode='AdvancerProto' fromField='value_changed' toNode='RotationSource' toField='set_fraction'></ROUTE>
+      <ROUTE fromNode='RotationSource' fromField='value_changed' toNode='ControlBox' toField='rotation'></ROUTE>
+      <ROUTE fromNode='AdvancerProto' fromField='value_changed' toNode='labelPosition' toField='set_fraction'></ROUTE>
+      <ROUTE fromNode='labelPosition' fromField='value_changed' toNode='label' toField='translation'></ROUTE>
       <!-- test set_key and key_changed -->
       <ProtoInstance name='ScalarSequencer' DEF='keyProto'>
         <fieldValue name='key' value='0 1'></fieldValue> 
