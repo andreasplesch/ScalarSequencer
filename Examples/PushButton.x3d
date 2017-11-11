@@ -4,7 +4,7 @@
 
 <Scene>
   <ExternProtoDeclare name='ScalarSequencer' 
-      url='"../Prototype/ScalarSequencerPrototype.x3d" 
+      url='"https://raw.githubusercontent.com/andreasplesch/ScalarSequencer/master/Prototype/ScalarSequencerPrototype.x3d" 
            "../Prototype/ScalarSequencerPrototype.x3d"'>
       <field name='next' type='SFBool' accessType='inputOnly'></field>
       <field name='previous' type='SFBool' accessType='inputOnly'></field>
