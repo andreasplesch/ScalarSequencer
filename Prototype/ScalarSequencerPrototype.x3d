@@ -52,7 +52,7 @@
 function initialize() {
 
   //_keyIndex = -1;
-  Browser.print('init index ' + _keyIndex);
+  Browser.print('init index: ' + _keyIndex);
 }
 
 function findInterval(time) {
@@ -82,6 +82,8 @@ function set_fraction(fraction) {
     value_changed = keyValue[keyIndex];
   }
   fraction_changed = fraction; // also generate fraction output event
+  Browser.print(' set_fraction: ' + _keyIndex);
+
   return;
 }
            
