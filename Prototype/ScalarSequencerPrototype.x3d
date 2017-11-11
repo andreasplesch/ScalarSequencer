@@ -74,11 +74,11 @@ function findInterval(time) {
 }
            
 function set_fraction(fraction) {
-
+ 
   var keyIndex = findInterval(fraction);
   // only generate event when necessary, BS Contact does not like !==
   if (keyIndex != _keyIndex) { 
-    _keyIndex = keyIndex;  
+    if (_keyIndex != -1) _keyIndex = keyIndex;  // check special init case
     value_changed = keyValue[keyIndex];
   }
   fraction_changed = fraction; // also generate fraction output event
