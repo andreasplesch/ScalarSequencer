@@ -8,7 +8,7 @@
            "../Prototype/ScalarSequencerPrototype.x3d"'>
       <field name='next' type='SFBool' accessType='inputOnly'></field>
       <field name='previous' type='SFBool' accessType='inputOnly'></field>
-      <field name='fraction' type='SFFloat' value='0' accessType='inputOutput'></field>
+      <field name='fraction' type='SFFloat' accessType='inputOutput'></field>
       <field name='key' type='MFFloat' accessType='inputOutput'></field>
       <field name='keyValue' type='MFFloat' accessType='inputOutput'></field>
       <field name='value_changed' type='SFFloat' accessType='outputOnly'></field>
