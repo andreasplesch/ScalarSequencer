@@ -47,6 +47,10 @@
 <![CDATA[ ecmascript:
 
 // var _keyIndex = -1; // use initializeOnly field instead for compat.           
+function initialize() {
+
+  _keyIndex = -1;
+}
 
 function findInterval(time) {
            
