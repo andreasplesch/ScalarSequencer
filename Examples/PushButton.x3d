@@ -12,6 +12,7 @@
       <field name='key' type='MFFloat' accessType='inputOutput'></field>
       <field name='keyValue' type='MFFloat' accessType='inputOutput'></field>
       <field name='value_changed' type='SFFloat' accessType='outputOnly'></field>
+      <field name='_keyIndex' type='SFFloat' value='-1' accessType='initializeOnly'></field>    
   </ExternProtoDeclare>
   <Background skyColor='1 1 1'></Background> 
       <Viewpoint description='Control 3-way lamp' orientation='-0.993 0.101 -0.063 1.06' position='0.06 3.63 2.29'></Viewpoint> 
