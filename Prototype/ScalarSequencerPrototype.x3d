@@ -50,6 +50,7 @@
 function initialize() {
 
   _keyIndex = -1;
+  Browser.print('init index ' + _keyIndex);
 }
 
 function findInterval(time) {
@@ -87,6 +88,7 @@ function next(val) {
   if (val) {
     _keyIndex = (_keyIndex + 1)%(key.length);
     value_changed = keyValue[_keyIndex];
+    Browser.print('next index ' + _keyIndex);
     return;
   }
 }
