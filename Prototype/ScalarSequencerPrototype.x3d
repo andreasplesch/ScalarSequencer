@@ -21,7 +21,6 @@
           <field name='key' type='MFFloat' accessType='inputOutput'></field>
           <field name='keyValue' type='MFFloat' accessType='inputOutput'></field>
           <field name='value_changed' type='SFFloat' accessType='outputOnly'></field>
-          <field name='_keyIndex' type='SFFloat' value='-1' accessType='initializeOnly'></field>
           
         </ProtoInterface>
         
@@ -43,17 +42,11 @@
               <connect protoField='key' nodeField='key'></connect>
               <connect protoField='keyValue' nodeField='keyValue'></connect>
               <connect protoField='value_changed' nodeField='value_changed'></connect>
-              <connect protoField='_keyIndex' nodeField='_keyIndex'></connect>
             </IS>
 
 <![CDATA[ ecmascript:
 
 // var _keyIndex = -1; // use initializeOnly field instead for compat.           
-function initialize() {
-
-  //_keyIndex = -1;
-  Browser.print('init index: ' + _keyIndex);
-}
 
 function findInterval(time) {
            
@@ -82,7 +75,7 @@ function set_fraction(fraction) {
     value_changed = keyValue[keyIndex];
   }
   fraction_changed = fraction; // also generate fraction output event
-  Browser.print(' set_fraction: ' + _keyIndex);
+  //Browser.print(' set_fraction: ' + _keyIndex);
 
   return;
 }
