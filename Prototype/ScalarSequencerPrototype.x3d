@@ -21,6 +21,8 @@
           <field name='key' type='MFFloat' accessType='inputOutput'></field>
           <field name='keyValue' type='MFFloat' accessType='inputOutput'></field>
           <field name='value_changed' type='SFFloat' accessType='outputOnly'></field>
+          <field name='traceEnabled' type='SFBool' value='false' accessType='initializeOnly' 
+            appinfo='enable console output to trace script computations and prototype progress'/>
           
         </ProtoInterface>
         
@@ -34,7 +36,8 @@
             <field name='keyValue' type='MFFloat' value='0 0.2 0.4 1' accessType='inputOutput'></field>
             <field name='value_changed' type='SFFloat' accessType='outputOnly'></field>
             <field name='_keyIndex' type='SFFloat' value='-1' accessType='initializeOnly'></field>
-            
+            <field name='traceEnabled' type='SFBool' value='false' accessType='initializeOnly' 
+              appinfo='enable console output to trace script computations and prototype progress'/>
             <IS>
               <connect protoField='next' nodeField='next'></connect>
               <connect protoField='previous' nodeField='previous'></connect>
@@ -42,6 +45,7 @@
               <connect protoField='key' nodeField='key'></connect>
               <connect protoField='keyValue' nodeField='keyValue'></connect>
               <connect protoField='value_changed' nodeField='value_changed'></connect>
+              <connect protoField='traceEnabled' nodeField='traceEnabled'></connect>
             </IS>
 
 <![CDATA[ ecmascript:
@@ -75,7 +79,7 @@ function set_fraction(fraction) {
     value_changed = keyValue[keyIndex];
   }
   fraction_changed = fraction; // also generate fraction output event
-  //Browser.print(' set_fraction: ' + _keyIndex);
+  tracaePrint(' set_fraction: ' + _keyIndex );
 
   return;
 }
@@ -85,7 +89,7 @@ function next(val) {
   if (val) {
     _keyIndex = (_keyIndex + 1)%(key.length);
     value_changed = keyValue[_keyIndex];
-    Browser.print('next index ' + _keyIndex);
+    tracePrint(' next index ' + _keyIndex);
     return;
   }
 }
@@ -103,14 +107,19 @@ function previous(val) {
 
 function key(val) {
 
-  //Browser.print('new key '+ val);
+  tracePrint(' new key: '+ val);
   key = val; // should generate key_changed event
 }
 
 function keyValue(val) {
 
-  //Browser.print('new keyValue '+ val);
+  tracePrint(' new keyValue: '+ val);
   keyValue = val; // should generate keyValue_changed event
+}
+
+function tracePrint (outputValue)
+{
+	if (traceEnabled) Browser.print (outputValue + '\n');
 }
 
 ]]>
