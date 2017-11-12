@@ -12,6 +12,8 @@
       <field name='key' type='MFFloat' accessType='inputOutput'></field>
       <field name='keyValue' type='MFFloat' accessType='inputOutput'></field>
       <field name='value_changed' type='SFFloat' accessType='outputOnly'></field>
+      <field name='traceEnabled' type='SFBool' accessType='initializeOnly'></field>
+      
   </ExternProtoDeclare>
   <Background skyColor='1 1 1'></Background> 
       <Viewpoint description='Control 3-way lamp' orientation='-0.993 0.101 -0.063 1.06' position='0.06 3.63 2.29'></Viewpoint> 
@@ -68,6 +70,7 @@
       <ProtoInstance name='ScalarSequencer' DEF='AdvancerProto'>
         <fieldValue name='key' value='0 0.2 0.4 1'></fieldValue> 
         <fieldValue name='keyValue' value='0 0.2 0.4 1'></fieldValue>
+        <fieldValue name='traceEnabled' value='true'></fieldValue>
       </ProtoInstance> 
       <!--ScalarSequencer DEF='Advancer' key='0 0.2 0.4 1' keyValue='0 0.2 0.4 1'></ScalarSequencer-->
       <!-- off,low,medium,high colors-->
